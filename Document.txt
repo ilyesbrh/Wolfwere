@@ -1,0 +1,64 @@
+
+1) Register
+ - user name
+
+3) Distribute ROLES
+
+4) DAY 1
+ - talk by random
+  *start
+  *end
+ - vote for MIR
+ - MIR world
+5) Night ONE
+ - mogly connect to father
+ - oracle spoil someone
+ - hunter kill someone
+ - wolfs kill someone
+ - witch try to solve or kill someone
+ - mogly if become Wolfware
+ - MIR Pass role if died
+6) DAY X 
+ - MIR talk
+ - Talk by random
+ - Vote for someone
+ - MIR talk
+
+State = {
+    users : [
+        {name : string , token: string , Role:ENUM , isPlaying: true/false , Talked:Boolean }
+    ],
+    witch:{user:user , protect:user , kill:user , action:kill/protect/none},
+    Guard:{user:user, protect:user},
+    oracle:{user:user, Spoil:user}
+    Talking: user,
+    MIR: user,
+    Vote: [ { user:user, votes:[user] } ] ,
+    Actions:[string]
+}
+
+oracle = function (token) =>{
+
+    user = getUser(token);
+
+    if ( !user.isPlaying ) return null;
+
+    return State.oracle.Spoil
+
+}
+
+witch = function (token) =>{
+
+    user = getUser(token);
+
+    if ( !user.isPlaying ) return null;
+
+    if (State.witch.action === 'kill'){
+
+        State.witch.kill.isPlaying = false;
+
+        return true;
+    }
+
+}
+

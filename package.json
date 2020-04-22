@@ -1,0 +1,22 @@
+{
+  "name": "wolfware",
+  "version": "0.0.1",
+  "description": "this is an attempt to create a online (multi/role)player game called loup-garou",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wolfware",
+    "loup-garou",
+    "discrod-Bot",
+    "angular",
+    "Frontend",
+    "chatBot"
+  ],
+  "author": "ilies bourouh",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0"
+  }
+}
