@@ -4,7 +4,7 @@
   "description": "this is an attempt to create a online (multi/role)player game called loup-garou",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [
     "wolfware",
@@ -18,5 +18,8 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
   }
 }
