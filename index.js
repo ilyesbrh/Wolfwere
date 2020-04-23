@@ -2,6 +2,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 
+global.playing = false;
 global.Roles = {
     werewolf:[{},{},{}],
     oracle: {},

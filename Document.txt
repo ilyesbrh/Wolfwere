@@ -11,7 +11,7 @@
  - vote for MIR
  - MIR world
 5) Night ONE
- - mogly connect to father
+ - mogly connect to father (Select by number)
  - oracle spoil someone
  - hunter kill someone
  - wolfs kill someone
