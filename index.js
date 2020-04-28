@@ -22,10 +22,10 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
-    
+
     if (message.channel.name !== 'loup-garou-chat') return;
-    if ( message.author.bot) return;
-    if (!message.content.startsWith(prefix) && !message.author.bot ) return message.delete();
+    if (message.author.bot) return;
+    if (!message.content.startsWith(prefix) && !message.author.bot) return message.delete();
 
     if (DATA.state() !== DATA.BEFORE_GAME && DATA.players().find((v) => message.author.id === v.id) === -1) {
         message.author.send('you are not a player in this game wait to next round');
@@ -69,8 +69,13 @@ client.on('messageReactionAdd', async (reaction, user) => {
         result = await require('./reactions/candidate').execute(reaction, user);
     else if (DATA.state() === DATA.IN_MIR_VOTE)
         result = await require('./reactions/voting').execute(reaction, user);
+    else if (DATA.state() === DATA.IN_WOLF_VOTE)
+        result = await require('./reactions/wolfVote').execute(reaction, user);
     else
         reaction.users.remove(user);
+
+    if (DATA.NextNightHalf()) require(`./commands/SecondNightHalf`).execute();
+    ;
 
     /* if not authorized */
     if (!result && reaction.message.channel.type !== "dm") reaction.users.remove(user);
@@ -81,5 +86,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
         REACTION OBJECT OR REACTION ID").users.remove("ID OR OBJECT OF USER TO REMOVE"); 
     */
 });
+
+
+
 
 client.login(token);

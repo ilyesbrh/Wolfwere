@@ -7,13 +7,9 @@ module.exports = {
 
         console.log('[BEFOR CONDITION]');
 
-        if (reaction.message.id !== DATA.electionMessage().id) {
-            return;
-        }
+        if (reaction.message.id !== DATA.electionMessage().id) return;
 
-        let elected = DATA.players().find(v => {
-            return v.id === author.id
-        });
+        let elected = DATA.players().find(v => v.id === author.id);
 
         if (!elected){
             console.log('user not found');
@@ -26,9 +22,7 @@ module.exports = {
 
         author.send('u are now a candidate to be Elected');
 
-        let channel = DATA.messageChannel();
-
-        await channel.send('<@' + author.id + '> is available to be elected');
+        await DATA.messageChannel().send('<@' + author.id + '> is available to be elected');
         
         return true;
     }

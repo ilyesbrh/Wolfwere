@@ -8,7 +8,7 @@ module.exports = {
         console.log('[BEFOR CONDITION]');
 
         // find elected in players list
-        let player = DATA.players().find((user) => user.id === reaction.message.mentions.members.first().id);
+        let player = DATA.players().find((user) => user.username === reaction.message.content.username);
         // find voter in players list
         let voter = DATA.players().find((user) => user.id === author.id);
 

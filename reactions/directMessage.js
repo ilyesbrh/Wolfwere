@@ -8,19 +8,56 @@ module.exports = {
         let target = DATA.players().find((user) => user.username === reaction.message.content);
         let VIP = DATA.players().find((user) => user.id === author.id);
 
-        if (!target || !VIP) return;
+        if (!target || !VIP || !VIP.isPlaying || VIP.voted) return false;
 
-        if (VIP.role === 'hybridWolf') this.mogly(reaction, VIP , target);
+        let result = false;
 
-        return true;
+        if (VIP.role === DATA.HybridWolf) result = this.mogly(VIP, target);
+
+        if (VIP.role === DATA.Priest) result = this.priest(VIP, target);
+
+        if (VIP.role === DATA.Witch) result = this.witch(VIP, target);
+
+        if (VIP.role === DATA.Oracle) result = this.oracle(VIP, target);
+
+        NextNightHalf();
+
+        return result;
     },
-    mogly(reaction, VIP , target) {
+    mogly(VIP, target) {
 
-        VIP.father = target;
+        VIP.target = target;
 
         VIP.send(`you have selected ${target.username} as your father`);
 
-    }
+        return true;
+
+    },
+    priest(VIP, target) {
+
+        VIP.target = target;
+        target.life ++;
+
+        VIP.send(`you have selected ${target.username} to protect`);
+
+        VIP.voted = true;
+        return true;
+        
+    },
+    oracle(VIP, target) {
+        
+        VIP.send(`${target.username} is a ${target.role}`);
+        
+        VIP.voted = true;
+        return true;
+    },
+    witch(VIP, target) {
+
+        
+    },
+
+
+
 
 };
 

@@ -1,13 +1,12 @@
 
 const DATA = require('../DataService');
-const Discord = require('discord.js');
 
 module.exports = {
     name: 'night',
     description: 'get my role',
     async execute(message, args) {
 
-        if (DATA.state() === DATA.BEFORE_FIRST_NIGHT || true) {
+        if (DATA.state() === DATA.BEFORE_FIRST_NIGHT) {
 
             // hybrid wolf select father
             const mogly = DATA.players('hybridWolf')[0];
@@ -25,6 +24,7 @@ module.exports = {
             // create wolfs room
 
             let wolfChannel = message.guild.channels.cache.find(channel => channel.name === "wolfs-chat");
+
             if (!wolfChannel) {
                 wolfChannel = await message.guild.channels.create('wolfs-chat', {
                     type: 'text',
@@ -40,55 +40,38 @@ module.exports = {
                     wolfChannel.updateOverwrite(wolf.id, { VIEW_CHANNEL: true, SEND_MESSAGES: true });
                 });
             }
+            DATA.setWolfChannel(wolfChannel);
             const invite = await wolfChannel.createInvite();
 
             DATA.players('werewolf').forEach(player => {
                 player.send('please join wolfs channel ' + invite.url);
             });
         }
-        this.init(message);
-
-    },
-    init(message) {
-
         // mute all
         for (let member of DATA.voiceChannel().members) {
             member[1].voice.setMute(true);
         }
         // reset vote 
-        DATA.players().forEach(player => {
-            player.candidate = { on: false, count: [] };
-            player.voted = false;
-        });
-        // 
-    },
-    start(message) {
-        if (DATA.state() !== DATA.BEFORE_FIRST_NIGHT) {
-            message.author.send("you can use this command only after [!village vote end]");
-            message.delete();
-            return;
-        }
-        DATA.setState(DATA.IN_MIR_VOTE);
+        DATA.reset();
 
-        let nar = DATA.narrator();
+        DATA.setState(DATA.NIGHT);
 
-        if (nar.id !== message.author.id) {
-            message.delete();
-            message.author.send('only narrator can execute this command');
-            return;
-        }
+        // Ask for vote from wolfs
 
+        DATA.voteMessage('vote for someone to kill:', DATA.wolfChannel(), p => { p.isPlaying && p.role !== DATA.Werewolf });
 
-        DATA.messageChannel().send('Vote started please react for one of the candidate :');
+        // ask priest for target
 
-        DATA.players().forEach(async (player, i) => {
+        const priest = DATA.players(DATA.Priest)[0];
 
-            if (!player.candidate.on) return;
+        if (priest.isPlaying) DATA.voteMessage('react to one of the players to Protect:', priest, p => { p.isPlaying && priest.target.id !== p.id });
 
-            let playerVotingMessage = await DATA.messageChannel().send(`${i}. <@${player.id}>`);
+        // ask oracle for target
 
-            playerVotingMessage.react('👍');
-        });
+        const oracle = DATA.players(DATA.Oracle)[0];
+
+        if (oracle.isPlaying) DATA.voteMessage('react to one of the players to reveal role:', oracle, p => { p.isPlaying });
+
     }
 };
 

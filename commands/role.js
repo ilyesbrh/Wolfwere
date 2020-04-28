@@ -16,8 +16,6 @@ module.exports = {
             
             if (user.role) {
                 message.author.send(user.role);
-            } else {
-                message.author.send("Villager");
             }
 
         } catch (error) {
