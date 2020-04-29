@@ -6,6 +6,8 @@ module.exports = {
     description: 'get my role',
     async execute(message, args) {
 
+        console.log('night start');
+        
         if (DATA.state() === DATA.BEFORE_FIRST_NIGHT) {
 
             // hybrid wolf select father
@@ -16,6 +18,17 @@ module.exports = {
         }
         DATA.setState(DATA.NIGHT);
         
+        if(DATA.players(DATA.Werewolf).length === 0){
+            DATA.messageChannel().send('Villagers Win');
+            require('./GameEnder').execute();
+            return true;
+        }
+        else if((DATA.players().length - DATA.players(DATA.Werewolf).length) === 0 ){
+            DATA.messageChannel().send('wolfs Win');
+            require('./GameEnder').execute();
+            return true;
+        }
+
         // mute all
         for (let member of DATA.voiceChannel().members) {
             member[1].voice.setMute(true);

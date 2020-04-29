@@ -2,7 +2,7 @@
 const DATA = require('../DataService');
 
 module.exports = {
-    name: 'Day',
+    name: 'day',
     description: 'day comes with lot of deaths!',
     async execute(message, args) {
 
@@ -20,7 +20,7 @@ module.exports = {
         }
 
         // if mogly father dies turn to wolf
-        let mogly = DATA.players(DATA.HybridWolf);
+        let mogly = DATA.players(DATA.HybridWolf)[0];
 
         if (mogly && mogly.target.life < 1) {
             mogly.role = DATA.Werewolf;
@@ -49,10 +49,22 @@ module.exports = {
         for (let member of DATA.voiceChannel().members) {
             member[1].voice.setMute(false);
         }
+
+        if(DATA.players(DATA.Werewolf).length === 0){
+            DATA.messageChannel().send('Villagers Win');
+            require('./GameEnder').execute();
+            return true;
+        }
+        else if((DATA.players().length - DATA.players(DATA.Werewolf).length) === 0 ){
+            DATA.messageChannel().send('wolfs Win');
+            require('./GameEnder').execute();
+            return true;
+        }
+
         DATA.messageChannel().send('A new Day has begun')
         DATA.voteMessage('Vote for someone to execute after discussion !', DATA.messageChannel(), p => p.life > 0);
 
-
+        return true;
 
     }
 };

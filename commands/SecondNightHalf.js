@@ -20,6 +20,8 @@ module.exports = {
         if (witch && witch.life > 0 && (!witch.revive || !witch.kill)) {
             if (target.life < 1) witch.send(`Wolfs killed ${target.username} react for him below to revive`);
             DATA.voteMessage('react to one of the players to kill or revive if dead :', witch, p => { p.life > 0 });
+        }else{
+            require('./BeforeDayStart').execute();
         }
 
         return true;

@@ -22,7 +22,7 @@ module.exports = {
 
         if (VIP.role === DATA.Hunter) result = this.hunter(VIP, target);
 
-        if (VIP.role === DATA.Hunter) result = this.MIR(VIP, target);
+        if (VIP.id === DATA.MIR().id) result = this.MIR(VIP, target);
 
         return result;
     },
@@ -48,6 +48,7 @@ module.exports = {
     },
     hunter(VIP, target) {
 
+        if (VIP.life > 0) return VIP.send('you are not dead yet') && false;
         if (VIP.target) return VIP.send('you already selected your target') && false;
 
         VIP.target = target;
@@ -69,9 +70,11 @@ module.exports = {
 
         if (DATA.NIGHT !== DATA.state()) return VIP.send('wait to until we send you targets') && false;
 
+        if (target.id === VIP.OldTarget.id) return VIP.send('you cant select the same person two times in a row') && false;
         if (VIP.target) return VIP.send('you already selected someone to protect today') && false;
 
         VIP.target = target;
+        VIP.OldTarget = target;
         target.life++;
 
         VIP.send(`you have selected ${target.username} to protect`);

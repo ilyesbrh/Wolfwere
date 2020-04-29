@@ -74,7 +74,7 @@ module.exports = {
         global.game.players.forEach(player => {
             player.candidate = { on: false, count: [] };
             player['voted'] = false;
-            player['target'] = null;
+            if (![this.HybridWolf, this.hunter].includes(player.role)) player['target'] = null;
         });
     },
     voteMessage(description, target, filter) {
