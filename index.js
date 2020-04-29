@@ -1,7 +1,10 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const DATA = require('./DataService');
-const { prefix, token } = require('./config.json');
+const { prefix, token } = {
+	prefix: "!village",
+	token: process.env.token
+};
 
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
@@ -87,9 +90,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
         result = await require('./reactions/directMessage').execute(reaction, user);
     else if (DATA.state() === DATA.IN_ELECTION)
         result = await require('./reactions/candidate').execute(reaction, user);
-    else if (DATA.state() === DATA.IN_MIR_VOTE)
+    else if (DATA.state() === DATA.IN_MIR_VOTE || DATA.IN_DAY === DATA.state())
         result = await require('./reactions/voting').execute(reaction, user);
-    else if (DATA.state() === DATA.NIGHT)
+    else if (DATA.state() === DATA.NIGHT && reaction.message.channel.id === DATA.wolfChannel().id)
         result = await require('./reactions/wolfVote').execute(reaction, user);
     else
         reaction.users.remove(user);

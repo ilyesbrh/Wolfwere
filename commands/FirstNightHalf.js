@@ -32,13 +32,13 @@ module.exports = {
 
         const priest = DATA.players(DATA.Priest)[0];
 
-        if (priest && priest.life > 0) DATA.voteMessage('react to one of the players to Protect:', priest, p => { p.life > 0 && priest.target.id !== p.id });
+        if (priest && priest.life > 0) DATA.voteMessage('react to one of the players to Protect:', priest, p =>  p.life > 0 && priest.target.id !== p.id );
 
         // ask oracle for target
 
         const oracle = DATA.players(DATA.Oracle)[0];
 
-        if (oracle && oracle.life > 0) DATA.voteMessage('react to one of the players to reveal role:', oracle, p => { p.life > 0 });
+        if (oracle && oracle.life > 0) DATA.voteMessage('react to one of the players to reveal role:', oracle, p =>  p.life > 0 );
 
     }
 };

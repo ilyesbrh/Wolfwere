@@ -37,7 +37,7 @@ module.exports = {
 
         if (DATA.NIGHT !== DATA.state()) return VIP.send('wait to until we send you targets') && false;
 
-        if (VIP.target) VIP.send('you already selected your father');
+        if (VIP.target) return VIP.send('you already selected your father') && false;
 
         VIP.target = target;
 
@@ -48,7 +48,7 @@ module.exports = {
     },
     hunter(VIP, target) {
 
-        if (VIP.target) VIP.send('you already selected your target');
+        if (VIP.target) return VIP.send('you already selected your target') && false;
 
         VIP.target = target;
 
@@ -69,7 +69,7 @@ module.exports = {
 
         if (DATA.NIGHT !== DATA.state()) return VIP.send('wait to until we send you targets') && false;
 
-        if (VIP.target) VIP.send('you already selected someone to protect today');
+        if (VIP.target) return VIP.send('you already selected someone to protect today') && false;
 
         VIP.target = target;
         target.life++;
@@ -85,7 +85,7 @@ module.exports = {
 
         if (DATA.NIGHT !== DATA.state()) return VIP.send('wait to until we send you targets') && false;
 
-        if (VIP.target) VIP.send('you already selected someone to view today');
+        if (VIP.target) return VIP.send('you already selected someone to protect today') && false;
 
         VIP.send(`${target.username} is a ${target.role}`);
 
@@ -101,12 +101,15 @@ module.exports = {
 
         if (VIP['revive'] && VIP['kill']) {
             VIP.send(`you lost all your power`);
+            return false;
         }
         else if (!DATA.SECOND_HALF) {
             VIP.send(`wait until wolfs kill someone`);
+            return false;
         }
         else if (!target) {
             VIP.send(`you chosen to did nothing this night`);
+            return false;
         }
         else if (target.life < 1) {
             target.life++;
