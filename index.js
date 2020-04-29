@@ -50,7 +50,6 @@ client.once('ready', () => {
 client.on('message', message => {
 
     if (message.channel.name !== 'loup-garou-chat') return;
-    message.author.send(sizeof(global.game));
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix) && !message.author.bot) return message.delete();
 
