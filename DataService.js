@@ -48,6 +48,7 @@ module.exports = {
 
     /* functions */
     init() {
+        global.game = {};
         this.setPlayers([]);
         this.setState(this.BEFORE_GAME);
 
