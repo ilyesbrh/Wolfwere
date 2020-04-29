@@ -3,12 +3,10 @@ const Discord = require('discord.js');
 const DATA = require('./DataService');
 const { prefix, token } = require('./config.json');
 
-DATA.init();
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.commands = new Discord.Collection();
 
-DATA.setClient(client);
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -17,7 +15,30 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
+client.on("guildCreate", async guild => {
+
+    let category = await guild.channels.create("Loup Garou", {type:'category'});
+
+    guild.channels.create('loup-garou-chat', {
+        type: 'text',
+        parent: category,
+        permissionOverwrites: [
+            { id: guild.id, allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'] },
+        ],
+    });
+    guild.channels.create('loup-garou-voice', {
+        type: 'voice',
+        parent: category,
+        permissionOverwrites: [
+            { id: guild.id, allow: ['VIEW_CHANNEL', 'CONNECT', 'SPEAK'], deny: ['STREAM'] },
+        ],
+    });
+
+});
+
 client.once('ready', () => {
+    DATA.init();
+    DATA.setClient(client);
     console.log('Ready!');
 });
 
@@ -34,8 +55,7 @@ client.on('message', message => {
 
     const args = message.content.slice(prefix.length).split(/ +/);
 
-    console.log(args.shift());
-
+    args.shift();
     const command = args.shift().toLowerCase();
 
     if (!client.commands.has(command)) return message.delete();
@@ -69,13 +89,11 @@ client.on('messageReactionAdd', async (reaction, user) => {
         result = await require('./reactions/candidate').execute(reaction, user);
     else if (DATA.state() === DATA.IN_MIR_VOTE)
         result = await require('./reactions/voting').execute(reaction, user);
-    else if (DATA.state() === DATA.IN_WOLF_VOTE)
+    else if (DATA.state() === DATA.NIGHT)
         result = await require('./reactions/wolfVote').execute(reaction, user);
     else
         reaction.users.remove(user);
 
-    if (DATA.NextNightHalf()) require(`./commands/SecondNightHalf`).execute();
-    ;
 
     /* if not authorized */
     if (!result && reaction.message.channel.type !== "dm") reaction.users.remove(user);

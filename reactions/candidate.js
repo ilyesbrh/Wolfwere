@@ -5,8 +5,6 @@ module.exports = {
     description: 'stand for elections',
     async execute(reaction, author) {
 
-        console.log('[BEFOR CONDITION]');
-
         if (reaction.message.id !== DATA.electionMessage().id) return;
 
         let elected = DATA.players().find(v => v.id === author.id);

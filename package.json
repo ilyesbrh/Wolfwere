@@ -17,7 +17,8 @@
   "author": "ilies bourouh",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.2.0"
+    "discord.js": "^12.2.0",
+    "rxjs": "^6.5.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"

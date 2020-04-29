@@ -1,3 +1,5 @@
+const rx = require('rxjs');
+
 module.exports = {
     /* Statics */
     BEFORE_GAME: 'game not started',
@@ -6,7 +8,7 @@ module.exports = {
     BEFORE_FIRST_NIGHT: 'before first night start',
     NIGHT: 'night starts',
     SECOND_NIGHT_HALF: 'after wolfs voted',
-    IN_WOLF_VOTE: 'wolfs voting time',
+    IN_DAY: 'vote and discussion time',
     /* roles */
     HybridWolf: 'hybridWolf',
     Oracle: 'oracle',
@@ -22,6 +24,7 @@ module.exports = {
     players: (role) => { if (!role || role === '') return global.players; else return global.players.filter(v => v.role === role); },
     narrator: () => global.Narrator,
     MIR: () => global.MIR,
+    Server: () => global.guild,
     messageChannel: () => global.messageChannel,
     voiceChannel: () => global.voiceChannel,
     wolfChannel: () => global.wolfChannel,
@@ -32,24 +35,32 @@ module.exports = {
     setPlayers: (p) => global.players = p,
     setNarrator: (n) => global.Narrator = n,
     setMIR: (m) => global.MIR = m,
+    setServer: (s) => global.guild = s,
     setMessageChannel: (c) => global.messageChannel = c,
     setVoiceChannel: (vc) => global.voiceChannel = vc,
     setWolfChannel: (wc) => global.wolfChannel = wc,
     setClient: (c) => global.client = c,
+    /* Subjects */
+    hunter: () => global.hunterSubject.asObservable(),
+    pushHunter: (t) => {
+        global.hunterSubject.next(t);
+    },
+
     /* functions */
     init() {
         this.setPlayers([]);
         this.setState(this.BEFORE_GAME);
+
+        global.hunterSubject = new rx.Subject();
+
     },
     fillPlayerList(Players) {
         Players.forEach(user => {
-            
+
             const player = user.user;
-            
+
             if (player.bot) return;
 
-            player['isPlaying'] = true;
-            player['talked'] = false;
             player['voted'] = false;
             player['target'] = null;
             player['life'] = 1;
@@ -62,7 +73,6 @@ module.exports = {
         global.players.forEach(player => {
             player.candidate = { on: false, count: [] };
             player['voted'] = false;
-            player['life'] = 1;
             player['target'] = null;
         });
     },
@@ -70,14 +80,22 @@ module.exports = {
 
         target.send(description);
 
-        global.players.filter(filter).forEach(async player => (await target.send(`${player.username}`)).react('👍'));
+        let filteredPlayers = global.players.filter(filter);
+
+        filteredPlayers.forEach(async player => (await target.send(`${player.username}`)).react('👍'));
     },
     NextNightHalf() {
-        const oracle = this.players(this.Oracle)[0];
+
         const priest = this.players(this.Priest)[0];
+        const mogly = this.players(this.HybridWolf)[0];
+        const oracle = this.players(this.Oracle)[0];
         const wolfs = this.players(this.Werewolf);
 
-        let goNext = oracle && oracle.voted && oracle.isPlaying && priest && priest.voted && priest.isPlaying;
+        if (priest && priest.life > 0 && !priest.target) return false;
+        else if (oracle && oracle.life > 0 && !oracle.target) return false;
+        else if (mogly && mogly.life > 0 && !mogly.target) return false;
+
+        let goNext = true;
 
         wolfs.forEach(wolf => goNext = goNext && wolf.voted);
 

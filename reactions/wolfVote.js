@@ -9,13 +9,15 @@ module.exports = {
         let target = DATA.players().find((user) => user.username === reaction.message.content);
         let VIP = DATA.players().find((user) => user.id === author.id);
 
-        if (!target || !VIP || !VIP.isPlaying || VIP.voted) return false;
+        if (!target || !VIP || !VIP.life > 0 || VIP.voted) return false;
 
         target.candidate.count.push(VIP);
         VIP.voted = true;
 
-        author.send(`you voted for ${player.username}`);
+        author.send(`<@${VIP.id}> voted for ${target.username}`);
 
+        if (DATA.NextNightHalf()) require(`../commands/SecondNightHalf`).execute();
+    
         return true;
     }
 
