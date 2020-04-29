@@ -1,7 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const DATA = require('./DataService');
-const sizeof = require('object-sizeof')
 
 const { prefix, token } = {
 	prefix: "!village",

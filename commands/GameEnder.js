@@ -1,4 +1,5 @@
 const DATA = require('../DataService');
+const sizeof = require('object-sizeof')
 
 module.exports = {
     name: 'end',
