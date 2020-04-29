@@ -19,31 +19,31 @@ module.exports = {
     Villager: 'villager',
     /* Globals */
     //getters
-    electionMessage: () => global.electionMessage,
-    state: () => global.state,
-    players: (role) => { if (!role || role === '') return global.players; else return global.players.filter(v => v.role === role); },
-    narrator: () => global.Narrator,
-    MIR: () => global.MIR,
-    Server: () => global.guild,
-    messageChannel: () => global.messageChannel,
-    voiceChannel: () => global.voiceChannel,
-    wolfChannel: () => global.wolfChannel,
-    client: () => global.client,
+    electionMessage: () => global.game.electionMessage,
+    state: () => global.game.state,
+    players: (role) => { if (!role || role === '') return global.game.players; else return global.game.players.filter(v => v.role === role); },
+    narrator: () => global.game.Narrator,
+    MIR: () => global.game.MIR,
+    Server: () => global.game.guild,
+    messageChannel: () => global.game.messageChannel,
+    voiceChannel: () => global.game.voiceChannel,
+    wolfChannel: () => global.game.wolfChannel,
+    client: () => global.game.client,
     //setters
-    setElectionMessage: (em) => global.electionMessage = em,
-    setState: (s) => global.state = s,
-    setPlayers: (p) => global.players = p,
-    setNarrator: (n) => global.Narrator = n,
-    setMIR: (m) => global.MIR = m,
-    setServer: (s) => global.guild = s,
-    setMessageChannel: (c) => global.messageChannel = c,
-    setVoiceChannel: (vc) => global.voiceChannel = vc,
-    setWolfChannel: (wc) => global.wolfChannel = wc,
-    setClient: (c) => global.client = c,
+    setElectionMessage: (em) => global.game.electionMessage = em,
+    setState: (s) => global.game.state = s,
+    setPlayers: (p) => global.game.players = p,
+    setNarrator: (n) => global.game.Narrator = n,
+    setMIR: (m) => global.game.MIR = m,
+    setServer: (s) => global.game.guild = s,
+    setMessageChannel: (c) => global.game.messageChannel = c,
+    setVoiceChannel: (vc) => global.game.voiceChannel = vc,
+    setWolfChannel: (wc) => global.game.wolfChannel = wc,
+    setClient: (c) => global.game.client = c,
     /* Subjects */
-    hunter: () => global.hunterSubject.asObservable(),
+    hunter: () => global.game.hunterSubject.asObservable(),
     pushHunter: (t) => {
-        global.hunterSubject.next(t);
+        global.game.hunterSubject.next(t);
     },
 
     /* functions */
@@ -51,7 +51,7 @@ module.exports = {
         this.setPlayers([]);
         this.setState(this.BEFORE_GAME);
 
-        global.hunterSubject = new rx.Subject();
+        global.game.hunterSubject = new rx.Subject();
 
     },
     fillPlayerList(Players) {
@@ -66,11 +66,11 @@ module.exports = {
             player['life'] = 1;
             player['candidate'] = { on: false, count: [] };
             player['role'] = this.Villager;
-            global.players.push(player);
+            global.game.players.push(player);
         });
     },
     reset() {
-        global.players.forEach(player => {
+        global.game.players.forEach(player => {
             player.candidate = { on: false, count: [] };
             player['voted'] = false;
             player['target'] = null;
@@ -80,7 +80,7 @@ module.exports = {
 
         target.send(description);
 
-        let filteredPlayers = global.players.filter(filter);
+        let filteredPlayers = global.game.players.filter(filter);
 
         filteredPlayers.forEach(async player => (await target.send(`${player.username}`)).react('👍'));
     },

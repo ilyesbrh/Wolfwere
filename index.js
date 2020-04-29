@@ -1,6 +1,8 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const DATA = require('./DataService');
+const sizeof = require('object-sizeof')
+
 const { prefix, token } = {
 	prefix: "!village",
 	token: process.env.token
@@ -48,6 +50,7 @@ client.once('ready', () => {
 client.on('message', message => {
 
     if (message.channel.name !== 'loup-garou-chat') return;
+    message.author.send(sizeof(global.game));
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix) && !message.author.bot) return message.delete();
 
