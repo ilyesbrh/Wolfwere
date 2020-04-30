@@ -31,7 +31,7 @@ module.exports = {
 
         // mute all
         for (let member of DATA.voiceChannel().members) {
-            member[1].voice.setMute(true);
+            //member[1].voice.setMute(true);
         }
         // reset vote 
         DATA.reset();

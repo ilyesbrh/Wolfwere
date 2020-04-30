@@ -27,7 +27,7 @@ module.exports = {
             // update roles only 
             let wolfChannel = DATA.wolfChannel();
             wolfChannel.updateOverwrite(wolfChannel.guild.roles.everyone, { VIEW_CHANNEL: false });
-            wolfsList.forEach(wolf => {
+            DATA.players(DATA.Werewolf).forEach(wolf => {
                 wolfChannel.updateOverwrite(wolf.id, { VIEW_CHANNEL: true, SEND_MESSAGES: true });
             });
             mogly.send('your father died :\') , you are a wolf now !');
@@ -50,12 +50,12 @@ module.exports = {
             member[1].voice.setMute(false);
         }
 
-        if(DATA.players(DATA.Werewolf).length === 0){
+        if (DATA.players(DATA.Werewolf).length === 0) {
             DATA.messageChannel().send('Villagers Win');
             require('./GameEnder').execute();
             return true;
         }
-        else if((DATA.players().length - DATA.players(DATA.Werewolf).length) === 0 ){
+        else if ((DATA.players().length - DATA.players(DATA.Werewolf).length) === 0) {
             DATA.messageChannel().send('wolfs Win');
             require('./GameEnder').execute();
             return true;

@@ -23,7 +23,7 @@ module.exports = {
 
         let executedPlayer = DATA.players().reduce((previous, player) => (!player.life > 0 || previous.candidate.count.length > player.candidate.count.length) ? previous : player);
 
-        DATA.messageChannel(`<@${executedPlayer.id}> is executed by the village his role was ${executedPlayer.role} \n .`);
+        DATA.messageChannel().send(`<@${executedPlayer.id}> is executed by the village his role was ${executedPlayer.role} \n .`);
         executedPlayer.life -= 2;
         /* dimo9ratia ak fahem xD */
         DATA.players().forEach(player => {

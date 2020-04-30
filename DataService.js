@@ -77,13 +77,15 @@ module.exports = {
             if (![this.HybridWolf, this.hunter].includes(player.role)) player['target'] = null;
         });
     },
-    voteMessage(description, target, filter) {
+    async voteMessage(description, target, filter, noOption) {
 
         target.send(description);
 
         let filteredPlayers = global.game.players.filter(filter);
 
         filteredPlayers.forEach(async player => (await target.send(`${player.username}`)).react('👍'));
+
+        if (noOption) { (await target.send(`Skip Vote`)).react('👍') };
     },
     NextNightHalf() {
 
